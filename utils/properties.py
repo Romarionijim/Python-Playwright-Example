@@ -6,4 +6,3 @@ UPLOAD_PATH = os.path.join(ROOT_DIR, upload_folder)
 
 downloads_folder = 'downloads'
 DOWNLOADS_PATH = os.path.join(ROOT_DIR, downloads_folder)
-print(DOWNLOADS_PATH)

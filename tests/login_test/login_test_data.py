@@ -1,0 +1,9 @@
+REQUIRED = 'Required'
+DASHBOARD = 'Dashboard'
+INVALID_CREDENTIALS = 'Invalid credentials'
+TRUE = True
+FALSE = False
+FIRST_INDEX = 0
+SECOND_INDEX = 1
+USERNAME = 'Username'
+PASSWORD = 'Password'

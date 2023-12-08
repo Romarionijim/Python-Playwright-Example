@@ -158,7 +158,7 @@ class OrangeHrBasePage(BasePage):
             item_list.append(item_inner_text)
         return item_name in item_list
 
-    def download_file(self, download_button_locator: Union[str, Locator], path: str = properties.DOWNLOAD_PATH):
+    def download_file(self, download_button_locator: Union[str, Locator], path: str = properties.DOWNLOADS_PATH):
         with self.page.expect_download() as download_info:
             self.click_element(download_button_locator)
             download = download_info.value

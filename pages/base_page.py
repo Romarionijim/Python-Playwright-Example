@@ -1,12 +1,11 @@
 from playwright.sync_api import Page, Locator
 from typing import Union
 from utils.custom_exceptions.custom_exceptions import ElementNotClickableError
-import abc
 
 """abstract base class for common reusable base functions mainly keyboard and mouse actions"""
 
 
-class BasePage(abc):
+class BasePage:
     def __init__(self, page: Page):
         self.page = page
 

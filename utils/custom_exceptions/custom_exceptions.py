@@ -1,2 +1,0 @@
-class ElementNotClickableError(Exception):
-    pass

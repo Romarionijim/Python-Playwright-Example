@@ -1,23 +1,13 @@
 import pytest
-
 from pages.login_page.login_page import LoginPage
-from pages.orange_hr_base_page import OrangeHrBasePage
+from pages.application_main_page import ApplicationMainPage
 from app_enums.navigation_enums.urls.application_url import ApplicationUrl
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Page
 from dotenv import load_dotenv
-from allure_commons.types import AttachmentType
 import allure
 from slugify import slugify
 
 load_dotenv()
-
-
-@pytest.fixture(scope="session")
-def browser_context_args(browser_context_args, tmpdir_factory: pytest.TempdirFactory):
-    return {
-        **browser_context_args,
-        "record_video_dir": tmpdir_factory.mktemp('videos')
-    }
 
 
 def pytest_runtest_makereport(item, call) -> None:
@@ -57,7 +47,7 @@ def browser_context_args_fixture(browser_context_args, tmpdir_factory: pytest.Te
 @pytest.fixture(scope="function")
 def load_app_and_login(page: Page):
     """loads the orange hr app website and logs in to the application for reusable code in each test"""
-    base = OrangeHrBasePage(page)
+    base = ApplicationMainPage(page)
     base.load_application(ApplicationUrl.ORANGE_HR_WEBSITE)
     login_page = LoginPage(page)
     login_page.login_to_orange_hr()
@@ -66,7 +56,7 @@ def load_app_and_login(page: Page):
 
 @pytest.fixture(scope="function")
 def load_application(page: Page):
-    base = OrangeHrBasePage(page)
+    base = ApplicationMainPage(page)
     base.load_application(ApplicationUrl.ORANGE_HR_WEBSITE)
     yield base
 
@@ -75,3 +65,10 @@ def load_application(page: Page):
 def instantiate_login_page_class(page: Page):
     login_page = LoginPage(page)
     yield login_page
+
+# @pytest.fixture(scope='session', autouse=True)
+# def browser_mode():
+#     """Runs chromium browser headless in CI environment, else runs headed."""
+#     if os.getenv('CI'):
+#         with async_playwright() as p:
+#             browser = p.chromium.launch(headless=)

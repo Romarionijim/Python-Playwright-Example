@@ -5,20 +5,20 @@ from typing import Union
 import logging
 import os
 from app_enums.navigation_enums.sidebar.sidebar_modules import SideBarModules
-from app_enums.navigation_enums.menu.module_portlet_menu import ModulePortletMenu
+from app_enums.navigation_enums.menu.module_menu_dropdowns import ModulePortletMenu
 from utils import properties
-from utils.properties import UPLOAD_PATH
 
 """this class contains common reusable functions that are used throughout the tested application"""
 
 
-class OrangeHrBasePage(BasePage):
+class ApplicationMainPage(BasePage):
     _table_container_locator = '.orangehrm-container'
     _sidebar_modules_locator = '.oxd-main-menu-item'
     _sidebar_expand_collapse_button_locator = '[class="oxd-icon-button oxd-main-menu-button"]'
     _dynamic_table_row_locator = f'{_table_container_locator} .oxd-table-card'
     _toastr_locator = '#oxd-toaster_1'
     _active_module_name_locator = '.oxd-topbar-header-breadcrumb'
+    _input_fields_wrapper = '.oxd-grid-item'
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -38,13 +38,12 @@ class OrangeHrBasePage(BasePage):
         """this function retrieves the column index dynamically by name - hardcoded since the table locators are the
         same in every page of the application instead of repeatedly re-writing them in every page this method is called"""
         table_header_container = self.page.locator(
-            f'{self._table_container_locator} .oxd-table-header.oxd-table-header')
+            f'{self._table_container_locator} .oxd-table-header')
         column_list = table_header_container.locator('[role="columnheader"]').all()
         for i in range(len(column_list)):
             if column_list[i].inner_text().strip() == column_name:
                 return i
-
-        raise Exception(f"the column {column_name} does not exist")
+        raise Exception(f"the column {column_name} does not exist in the column list")
 
     def get_file_size(self, file_path: str) -> int:
         megabyte_size = (1024 ** 2)
@@ -67,32 +66,6 @@ class OrangeHrBasePage(BasePage):
         upload_button = self.page.locator(upload_locator)
         upload_button.set_input_files(file_path)
 
-    def click_and_choose_from_dropdown_by_text(self, dropdown_locator: Union[str, Locator], dropdown_list_locator: str,
-                                               text: Union[str, list[str]]):
-        """clicks on a dropdown - loops through a list of items and selects an item based on the provided text in the
-        test - it clicks on the dropdown again and chooses another item if multi-selection is supported"""
-        dropdown_element = self.page.locator(dropdown_locator)
-        self.click_element(dropdown_element)
-        provided_item_args = text if isinstance(text, list) else list(text)
-        for i in range(len(provided_item_args)):
-            item_text = provided_item_args[i]
-            dropdown_items = self.page.locator(f'{dropdown_list_locator}:hast-text("{item_text}")').all()
-            for item in dropdown_items:
-                item_inner_text = item.inner_text()
-                if text in dropdown_items and item_inner_text == text:
-                    item.click()
-                    break
-            if i < len(provided_item_args) - 1:
-                self.click_element(dropdown_element)
-
-        raise ValueError(f'the item {text} was not found in the list')
-
-    def click_on_specific_button_from_table(self, row_text: str,
-                                            button_locator: Union[str, Locator]):
-        table_row = self.page.locator(f'{self._table_container_locator} .oxd-table-card', has_text=row_text)
-        button_element = table_row.locator(button_locator)
-        self.click_element(button_element)
-
     def get_cell_value_inner_text(self, row_text: str, column_name: str) -> str:
         table_row = self.page.locator(f'{self._table_container_locator} .oxd-table-card', has_text=row_text)
         table_column = self.get_column_index_by_name(column_name)
@@ -101,6 +74,7 @@ class OrangeHrBasePage(BasePage):
         return cell_inner_text
 
     def get_order_of_cell_values(self, column_name: str) -> list:
+        """get the order of all cell values under a specific column in a table"""
         cell_value_order: list = []
         table = self.page.locator(f'{self._table_container_locator} .oxd-table-card').all()
         table_column = self.get_column_index_by_name(column_name)
@@ -154,7 +128,7 @@ class OrangeHrBasePage(BasePage):
         item_list: list = []
         item_list_locator = self.page.locator(list_locator).all()
         for item in item_list_locator:
-            item_inner_text = item.inner_text()
+            item_inner_text = item.inner_text().strip()
             item_list.append(item_inner_text)
         return item_name in item_list
 
@@ -168,7 +142,8 @@ class OrangeHrBasePage(BasePage):
             return file_name
 
     def get_toastr_notification_caption(self):
-        """gets the toastr notification confirmation text after performing a type of action such as deletion of a row"""
+        """gets the toastr notification popup-like confirmation text after performing a type of action such as
+        deletion of a row"""
         toastr = self.page.locator(self._toastr_locator)
         toastr_visibility = toastr.is_visible()
         if toastr_visibility:
@@ -177,18 +152,18 @@ class OrangeHrBasePage(BasePage):
         raise Exception("the toastr was not shown")
 
     def get_all_row_cell_values(self, row_text: str, expected_values: list[str]):
-        """get all row's inner text and validate that the expected value list exist on that specific row"""
+        """returns if the expected values exist on a specific row else it raises an error"""
         table_row = self.page.locator(self._dynamic_table_row_locator, has_text=row_text)
         row_inner_text = table_row.inner_text().strip()
         for value in expected_values:
-            if value in row_inner_text:
-                return True
-        raise ValueError(f"one or more cell values {expected_values} were not found on table row")
+            if value not in row_inner_text:
+                raise ValueError(f"one or more cell values {expected_values} were not found on table row")
+        return True
 
     def count_client_side_validation_errors_on_empty_fields(self, input_fields: Union[str, Locator],
                                                             validation_error_locator: Union[str, Locator]):
-        """returns all inner texts of all validation errors  if all fields are emtpy - else return the index of the
-        specific inputs that remained empty that contains the validation error after submitting """
+        """returns all inner texts of all validation errors  if all fields are emtpy - otherwise it returns the index
+        of the specific inputs that remained empty that contains the validation error after submitting"""
         input_values = self.get_input_fields_values(input_fields)
         validation_error_element = self.page.locator(validation_error_locator)
         validation_error_count = validation_error_element.count()

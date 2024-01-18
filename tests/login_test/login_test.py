@@ -1,6 +1,5 @@
 import pytest
 import allure
-from utils.test_steps.steps import Steps
 from tests.login_test.login_test_data import *
 
 

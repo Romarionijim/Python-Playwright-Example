@@ -1,11 +1,12 @@
 from playwright.sync_api import Page, Locator
 from typing import Union
 from utils.custom_exceptions.custom_exceptions import ElementNotClickableError
+from abc import ABC
 
 """abstract base class for common reusable base functions mainly keyboard and mouse actions"""
 
 
-class BasePage:
+class BasePage(ABC):
     def __init__(self, page: Page):
         self.page = page
 
@@ -29,7 +30,7 @@ class BasePage:
 
     def fill_text(self, locator: Union[str, Locator], text: str):
         element = self.__get_element_type(locator)
-        element.click(force=True)
+        self.click_element(element)
         element.fill(text)
 
     def hover_element(self, locator: Union[str, Locator]):
@@ -82,7 +83,7 @@ class BasePage:
         return element_list_count
 
     def get_checkbox_state(self, checkbox_locator: Union[str, Locator]) -> bool:
-        """applies to checkboxes and radio buttons"""
+        """applies to checkboxes and radio buttons - returns a boolean to check if checkbox/radio is checked or not"""
         checkbox = self.__get_element_type(checkbox_locator)
         return checkbox.is_checked()
 

@@ -1,4 +1,4 @@
-from pages.orange_hr_base_page import OrangeHrBasePage
+from pages.application_main_page import ApplicationMainPage
 from playwright.sync_api import Page, Locator
 import os
 from dotenv import load_dotenv
@@ -7,7 +7,7 @@ import logging
 load_dotenv()
 
 
-class LoginPage(OrangeHrBasePage):
+class LoginPage(ApplicationMainPage):
     __username_locator = '[name="username"]'
     __password_locator = '[name="password"]'
     __login_button_locator = '.orangehrm-login-button'

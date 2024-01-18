@@ -1,7 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"broken","Fri Dec 08 13:17:49 GMT 2023","Fri Dec 08 13:17:49 GMT 2023","0","tests.login_test","Login test suite","","","","test_login_with_empty_username_field[chromium]",""
-"broken","Fri Dec 08 13:17:49 GMT 2023","Fri Dec 08 13:17:49 GMT 2023","0","tests.login_test","Login test suite","","","","test_login_with_empty_password_field[chromium]",""
-"passed","Fri Dec 08 13:17:48 GMT 2023","Fri Dec 08 13:17:48 GMT 2023","0","tests","test_add","","","","test_add",""
-"broken","Fri Dec 08 13:17:49 GMT 2023","Fri Dec 08 13:17:49 GMT 2023","0","tests.login_test","Login test suite","","","","login negative test",""
-"broken","Fri Dec 08 13:17:48 GMT 2023","Fri Dec 08 13:17:48 GMT 2023","0","tests.login_test","Login test suite","","","","test_valid_login[chromium]",""
-"broken","Fri Dec 08 13:17:49 GMT 2023","Fri Dec 08 13:17:49 GMT 2023","0","tests.login_test","Login test suite","","","","test_login_with_invalid_credentials[chromium]",""

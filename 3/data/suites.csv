@@ -1,0 +1,6 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"broken","Thu Jan 18 19:08:35 GMT 2024","Thu Jan 18 19:08:35 GMT 2024","0","tests.login_test","Login test suite","","","","test_valid_login[chromium]",""
+"broken","Thu Jan 18 19:08:37 GMT 2024","Thu Jan 18 19:08:37 GMT 2024","0","tests.login_test","Login test suite","","","","test_login_with_empty_username_field[chromium]",""
+"broken","Thu Jan 18 19:08:37 GMT 2024","Thu Jan 18 19:08:37 GMT 2024","0","tests.login_test","Login test suite","","","","test_login_with_empty_password_field[chromium]",""
+"broken","Thu Jan 18 19:08:37 GMT 2024","Thu Jan 18 19:08:37 GMT 2024","0","tests.login_test","Login test suite","","","","login negative test",""
+"broken","Thu Jan 18 19:08:37 GMT 2024","Thu Jan 18 19:08:37 GMT 2024","0","tests.login_test","Login test suite","","","","test_login_with_invalid_credentials[chromium]",""

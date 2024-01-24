@@ -28,13 +28,6 @@ jobs:
           pip install -r requirements.txt
       - name: install playwright browsers
         run: python -m playwright install --with-deps
-  test:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - uses: actions/checkout@v3
       - name: Run tests with pytest
         run: pytest -m ${{ matrix.modules }} --tracing=retain-on-failure
       - uses: actions/upload-artifact@v3
@@ -42,13 +35,6 @@ jobs:
         with:
           name: test-results-${{ matrix.modules }}
           path: test-results/
-  deploy-report:
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    needs:
-      - test
-    steps:
-      - uses: actions/checkout@v3
       - name: configure allure action
         uses: simple-elf/allure-report-action@master
         if: always()

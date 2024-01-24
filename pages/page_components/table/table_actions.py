@@ -1,11 +1,11 @@
-from pages.application_main_page import ApplicationMainPage
+from pages.orange_hr_base_page import OrangeHrBasePage
 from pages.base_page import BasePage
 from playwright.sync_api import Page
 from typing import Union, Optional
 from playwright.sync_api import Locator
 
 
-class TableActions(ApplicationMainPage):
+class TableActions(OrangeHrBasePage):
     __checkbox_wrapper_locator = '.oxd-checkbox-wrapper input'
     __delete_selected_locator = '[class="oxd-button oxd-button--medium oxd-button--label-danger orangehrm-horizontal-margin"]'
     __records_found_locator = '[class="orangehrm-horizontal-padding orangehrm-vertical-padding"] .oxd-text'
@@ -14,17 +14,19 @@ class TableActions(ApplicationMainPage):
     __edit_button_table_locator = '[class="oxd-icon bi-pencil-fill"]'
     __eye_button_table_locator = '[class="oxd-icon bi-eye-fill"]'
     __deletion_dialog_locator = '[role="document"]'
+    __table_container_locator = '.orangehrm-container'
+    __dynamic_table_row_locator = f'{__table_container_locator} .oxd-table-card'
 
     def __init__(self, page: Page):
         super().__init__(page)
 
     def count_table_items(self) -> int:
-        table_items = self.page.locator(f'{self._table_container_locator} .oxd-table-card')
+        table_items = self.page.locator(f'{self.__table_container_locator} .oxd-table-card')
         return self.count_items(table_items)
 
     def click_on_specific_button_from_table(self, row_text: str,
                                             button_locator: Union[str, Locator]):
-        table_row = self.page.locator(f'{self._table_container_locator} .oxd-table-card', has_text=row_text)
+        table_row = self.page.locator(f'{self.__table_container_locator} .oxd-table-card', has_text=row_text)
         button_element = table_row.locator(button_locator)
         self.click_element(button_element)
 
@@ -87,7 +89,7 @@ class TableActions(ApplicationMainPage):
         delete_selected_button_visibility = delete_selected_button.is_visible()
         if delete_selected_button_visibility:
             self.click_element(delete_selected_button)
-            return self.check_if_item_is_in_list(self._dynamic_table_row_locator, row_text)
+            return self.check_if_item_is_in_list(self.__dynamic_table_row_locator, row_text)
 
     def get_records_found(self) -> str:
         records_found_locator = self.page.locator(self.__records_found_locator)
@@ -95,12 +97,19 @@ class TableActions(ApplicationMainPage):
         return records_found_inner_text
 
     def download_file_from_table_row(self, row_text: str):
-        table_row = self.page.locator(self._dynamic_table_row_locator, has_text=row_text)
+        table_row = self.page.locator(self.__dynamic_table_row_locator, has_text=row_text)
         download_button = table_row.locator(self.__download_button_table_locator)
         return self.download_file(download_button)
 
     def check_if_item_row_exist(self, row_text: str):
-        return self.check_if_item_is_in_list(self._dynamic_table_row_locator, row_text)
+        return self.check_if_item_is_in_list(self.__dynamic_table_row_locator, row_text)
+
+    def get_cell_value_inner_text(self, row_text: str, column_name: str) -> str:
+        table_row = self.page.locator(f'{self.__table_container_locator} .oxd-table-card', has_text=row_text)
+        table_column = self.get_column_index_by_name(column_name)
+        table_cell = table_row.locator('[role=cell]').nth(table_column)
+        cell_inner_text = table_cell.inner_text()
+        return cell_inner_text
 
     def get_table_cell_value(self, row_text: str, column_name: str):
         return self.get_cell_value_inner_text(row_text, column_name)
@@ -114,6 +123,37 @@ class TableActions(ApplicationMainPage):
 
     def select_specific_table_row(self, row_text: str):
         """selects the checkbox on the specific row that contains a specific text"""
-        table_row = self.page.locator(self._dynamic_table_row_locator, has_text=row_text)
+        table_row = self.page.locator(self.__dynamic_table_row_locator, has_text=row_text)
         row_checkbox = table_row.locator(self.__checkbox_wrapper_locator)
         self.click_element(row_checkbox)
+
+    def get_column_index_by_name(self, column_name: str) -> int:
+        """this function retrieves the column index dynamically by name - hardcoded since the table locators are the
+        same in every page of the application instead of repeatedly re-writing them in every page this method is called"""
+        table_header_container = self.page.locator(
+            f'{self.__table_container_locator} .oxd-table-header')
+        column_list = table_header_container.locator('[role="columnheader"]').all()
+        for i in range(len(column_list)):
+            if column_list[i].inner_text().strip() == column_name:
+                return i
+        raise Exception(f"the column {column_name} does not exist in the column list")
+
+    def get_order_of_cell_values(self, column_name: str) -> list:
+        """get the order of all cell values under a specific column in a table"""
+        cell_value_order: list = []
+        table = self.page.locator(f'{self.__table_container_locator} .oxd-table-card').all()
+        table_column = self.get_column_index_by_name(column_name)
+        for row in table:
+            row_cell = row.locator('[role=cell]').nth(table_column)
+            cell_inner_text = row_cell.inner_text().strip()
+            cell_value_order.append(cell_inner_text)
+        return cell_value_order
+
+    def get_all_row_cell_values(self, row_text: str, expected_values: list[str]):
+        """returns if the expected values exist on a specific row else it raises an error"""
+        table_row = self.page.locator(self.__dynamic_table_row_locator, has_text=row_text)
+        row_inner_text = table_row.inner_text().strip()
+        for value in expected_values:
+            if value not in row_inner_text:
+                raise ValueError(f"one or more cell values {expected_values} were not found on table row")
+        return True

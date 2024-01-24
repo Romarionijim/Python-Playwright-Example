@@ -1,6 +1,6 @@
 import pytest
 from pages.login_page.login_page import LoginPage
-from pages.application_main_page import ApplicationMainPage
+from pages.orange_hr_base_page import OrangeHrBasePage
 from app_enums.navigation_enums.urls.application_url import ApplicationUrl
 from playwright.sync_api import Page
 from dotenv import load_dotenv
@@ -11,7 +11,7 @@ load_dotenv()
 
 
 def pytest_runtest_makereport(item, call) -> None:
-    """attach screenshot and video to allure report on test failure"""
+    """attach screenshot and video to allure report on test failure/exception is thrown"""
     if call.when == "call":
         if call.excinfo is not None and "page" in item.funcargs:
             page: Page = item.funcargs["page"]
@@ -47,7 +47,7 @@ def browser_context_args_fixture(browser_context_args, tmpdir_factory: pytest.Te
 @pytest.fixture(scope="function")
 def load_app_and_login(page: Page):
     """loads the orange hr app website and logs in to the application for reusable code in each test"""
-    base = ApplicationMainPage(page)
+    base = OrangeHrBasePage(page)
     base.load_application(ApplicationUrl.ORANGE_HR_WEBSITE)
     login_page = LoginPage(page)
     login_page.login_to_orange_hr()
@@ -56,15 +56,22 @@ def load_app_and_login(page: Page):
 
 @pytest.fixture(scope="function")
 def load_application(page: Page):
-    base = ApplicationMainPage(page)
+    """load the app and login to the website - purpose to prevent code duplication since this method is called in each test function"""
+    base = OrangeHrBasePage(page)
     base.load_application(ApplicationUrl.ORANGE_HR_WEBSITE)
     yield base
 
 
 @pytest.fixture(scope="function")
 def instantiate_login_page_class(page: Page):
+    """instantiate the login page to prevent code duplication - this fixture is for login negative tests """
     login_page = LoginPage(page)
     yield login_page
+
+
+@pytest.fixture()
+def page(page: Page):
+    yield page
 
 # @pytest.fixture(scope='session', autouse=True)
 # def browser_mode():

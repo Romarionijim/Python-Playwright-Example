@@ -18,7 +18,7 @@ def test_valid_login(load_app_and_login):
 @allure.epic("Login Sanity")
 @allure.suite('Login test suite')
 @allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.sanity
+@pytest.mark.SANITY
 def test_login_with_invalid_credentials(load_application, instantiate_login_page_class):
     with allure.step("load app instantiate the login page class via pytest fixture"):
         login_page = instantiate_login_page_class
@@ -31,7 +31,7 @@ def test_login_with_invalid_credentials(load_application, instantiate_login_page
 @allure.suite('Login test suite')
 @allure.title('login negative test')
 @allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.sanity
+@pytest.mark.SANITY
 def test_login_with_empty_fields(load_application, instantiate_login_page_class):
     with allure.step("set up  login page class via pytest fixture"):
         login_page = instantiate_login_page_class
@@ -43,7 +43,7 @@ def test_login_with_empty_fields(load_application, instantiate_login_page_class)
 @allure.epic("Login Sanity")
 @allure.suite('Login test suite')
 @allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.sanity
+@pytest.mark.SANITY
 def test_login_with_empty_username_field(load_application, instantiate_login_page_class):
     with allure.step("load app and setup login class object"):
         login_page = instantiate_login_page_class
@@ -56,7 +56,7 @@ def test_login_with_empty_username_field(load_application, instantiate_login_pag
 @allure.epic("Login Sanity")
 @allure.suite('Login test suite')
 @allure.severity(allure.severity_level.CRITICAL)
-@pytest.mark.sanity
+@pytest.mark.SANITY
 def test_login_with_empty_password_field(load_application, instantiate_login_page_class):
     with allure.step("load app and setup login class object"):
         login_page = instantiate_login_page_class

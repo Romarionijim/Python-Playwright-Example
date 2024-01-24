@@ -1,11 +1,14 @@
 from playwright.sync_api import Page, Locator
-from pages.application_main_page import ApplicationMainPage
+
+from pages.base_page import BasePage
+from pages.orange_hr_base_page import OrangeHrBasePage
 from typing import Union
 
 
-class Dropdown(ApplicationMainPage):
+class Dropdown(BasePage):
     __dropdown_select_locator = '[class="oxd-select-wrapper"]'
     __dropdown_list_items = '[class="oxd-select-text-input"]'
+    __input_fields_wrapper = '[class="oxd-input-group oxd-input-field-bottom-space"]'
 
     def __init__(self, page: Page):
         super().__init__(page)
@@ -32,7 +35,7 @@ class Dropdown(ApplicationMainPage):
         raise ValueError(f'the item {text} was not found in the list')
 
     def choose_item_from_dropdown(self, dropdown_wrapper_text: str, item_text: str):
-        dropdown_locator = self.page.locator(self._input_fields_wrapper, has_text=dropdown_wrapper_text)
+        dropdown_locator = self.page.locator(self.__input_fields_wrapper, has_text=dropdown_wrapper_text)
         select_locator = dropdown_locator.locator(self.__dropdown_select_locator)
         dropdown_item_list = select_locator.locator(self.__dropdown_list_items)
         self.__click_and_choose_from_dropdown_by_text(select_locator, dropdown_item_list, item_text)

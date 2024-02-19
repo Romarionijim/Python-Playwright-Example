@@ -25,7 +25,7 @@
     
 ## Installing dependencies 
 * after activating your venv - install dependencies from the requirements.txt file by running:
-    * `python install -r requirements.txt`
+    * `pip install -r requirements.txt`
     * this should install all of the existing dependencies stored in the requirements.txt file
 
 ## Running tests

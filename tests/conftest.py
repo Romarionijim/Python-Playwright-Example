@@ -1,8 +1,12 @@
+import os
+
 import pytest
+from playwright.async_api import async_playwright
+
 from pages.login_page.login_page import LoginPage
 from pages.orange_hr_base_page import OrangeHrBasePage
 from app_enums.navigation_enums.urls.application_url import ApplicationUrl
-from playwright.sync_api import Page
+from playwright.sync_api import Page, sync_playwright
 from dotenv import load_dotenv
 import allure
 from slugify import slugify
@@ -73,9 +77,26 @@ def instantiate_login_page_class(page: Page):
 def page(page: Page):
     yield page
 
+
 # @pytest.fixture(scope='session', autouse=True)
 # def browser_mode():
 #     """Runs chromium browser headless in CI environment, else runs headed."""
 #     if os.getenv('CI'):
 #         with async_playwright() as p:
 #             browser = p.chromium.launch(headless=)
+
+
+# @pytest.fixture(scope="session", autouse=True)
+# def head():
+#     async with sync_playwright() as p:
+#         browser = p.chromium.launch(headless=False)
+#         context = browser.new_context()
+#         page = context.new_page()
+#         yield page
+#     if os.getenv("HEADED"):
+#         pass
+#     else:
+#         browser = p.chromium.launch(headless=True)
+#         context = browser.new_context()
+#         page = context.new_page()
+#         yield page

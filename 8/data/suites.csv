@@ -1,2 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"broken","Mon Feb 19 18:01:07 GMT 2024","Mon Feb 19 18:01:07 GMT 2024","0","tests.admin_module_tests","admin_sanity_crud_test","","","","test_add_admin_user",""

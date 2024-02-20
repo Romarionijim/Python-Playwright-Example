@@ -25,7 +25,7 @@
     
 ## Installing dependencies 
 * after activating your venv - install dependencies from the requirements.txt file by running:
-    * `pip install -r requirements.txt`
+    * `python install -r requirements.txt`
     * this should install all of the existing dependencies stored in the requirements.txt file
 
 ## Running tests
@@ -43,6 +43,11 @@
     * to run a specific mark - run:
         * `pytest -m mark-name` (replace this with the actual mark)
         * this will run each test with this specific mark one by one 
+## Running tests in headed mode
+* Playwright runs tests headless by default - in order to run the tests in headed mode you have two options:
+    
+    * using the headed flag option - open terminal and run `pytest --headed`
+    * you can open the `pytest.ini` file and add the flag there `--headed` in order to type `--head` everytime in the terminal (keep in mind that for the test to run in CI you must remove the `--headed` from the `pytest.ini` file)
 ## Running tests in parallel
 * In order to run tests in parrallel using xdit (which is already installed in requirement.txt) open terminal and run:
  * `pytest -n auto`

@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         modules: [ 'SANITY', 'ADMIN' ]
+        browsers: [ 'chromium','firefox' ]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -29,11 +30,11 @@ jobs:
       - name: install playwright browsers
         run: python -m playwright install --with-deps
       - name: Run tests with pytest
-        run: pytest -m ${{ matrix.modules }} --tracing=retain-on-failure
+        run: pytest -m ${{ matrix.modules }} --tracing=retain-on-failure --browser ${{ matrix.browsers }}
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: test-results-${{ matrix.modules }}
+          name: test-results-${{ matrix.modules }}-${{ matrix.browsers }}
           path: test-results/
       - name: configure allure action
         uses: simple-elf/allure-report-action@master
@@ -42,12 +43,12 @@ jobs:
         with:
           allure_results: allure-results
           gh_pages: gh-pages
-          allure_report: allure-report-${{ matrix.modules }}
-          allure_history: allure-history-${{ matrix.modules }}
+          allure_report: allure-report-${{ matrix.modules }}-${{ matrix.browsers }}
+          allure_history: allure-history-${{ matrix.modules }}-${{ matrix.browsers }}
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v2
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history-${{ matrix.modules }}
+          PUBLISH_DIR: allure-history-${{ matrix.modules }}-${{ matrix.browsers }}

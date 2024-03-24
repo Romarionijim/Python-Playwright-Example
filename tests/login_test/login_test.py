@@ -12,7 +12,7 @@ def test_valid_login(load_app_and_login):
         orange_hr_base_page, login = load_app_and_login
     with allure.step("validate user is logged in successfully to the dashboard page"):
         actual = orange_hr_base_page.get_current_active_module_name()
-        assert actual == 'noooo'
+        assert actual == DASHBOARD
 
 
 @allure.epic("Login Sanity")

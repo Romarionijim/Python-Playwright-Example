@@ -1,5 +1,2 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sun Mar 24 08:30:35 GMT 2024","Sun Mar 24 08:30:38 GMT 2024","2662","tests.login_test","Login test suite","","","","test_login_with_empty_username_field",""
-"passed","Sun Mar 24 08:30:29 GMT 2024","Sun Mar 24 08:30:32 GMT 2024","2725","tests.login_test","Login test suite","","","","login negative test",""
-"passed","Sun Mar 24 08:30:41 GMT 2024","Sun Mar 24 08:30:44 GMT 2024","2661","tests.login_test","Login test suite","","","","test_login_with_empty_password_field",""
-"passed","Sun Mar 24 08:30:23 GMT 2024","Sun Mar 24 08:30:26 GMT 2024","3297","tests.login_test","Login test suite","","","","test_login_with_invalid_credentials",""
+"broken","Sun Mar 24 08:30:25 GMT 2024","Sun Mar 24 08:30:55 GMT 2024","30508","tests.admin_module_tests","admin_sanity_crud_test","","","","test_add_admin_user",""
